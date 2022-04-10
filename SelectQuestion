@@ -1,0 +1,1 @@
+SELECT OgrenciID,Ad,Soyad, (Yarıyıl_Not_1+Yarıyıl_Not_2)/2 FROM Ogrenciler WHERE Dogum_Tarihi >add_months( trunc(sysdate), -12*24 ) and Dogum_Tarihi <add_months( trunc(sysdate), -12*20 ) and Il= '34' and Mezun ='T'
