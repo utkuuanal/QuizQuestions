@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        .container {
+            display: flex;
+        }
+
+
+
+        .flex-item {
+            flex-grow: 0.1;
+        }
+
+
+        label {
+            text-align: left;
+            width: 150px;
+            display: block;
+            float: left;
+            clear: right;
+            font-size: 18;
+        }
+    </style>
+
+    <script>
+        function enableKdv() {
+
+            switch (document.getElementById("kdvekle").checked) {
+                case true:
+                    document.getElementById("kdvyüzde").disabled = false;
+                    document.getElementById("kdvtutar").disabled = false;
+
+                    break;
+                case false:
+                    document.getElementById("kdvyüzde").disabled = true;
+                    document.getElementById("kdvtutar").disabled = true;
+
+                    document.getElementById("kdvyüzde").value = "";
+                    document.getElementById("kdvtutar").value = "";
+
+
+                    break;
+
+            }
+        }
+
+        function enableInd() {
+
+            switch (document.getElementById("indekle").checked) {
+                case true:
+                    document.getElementById("indyüzde").disabled = false;
+                    document.getElementById("indtutar").disabled = false;
+
+                    break;
+                case false:
+                    document.getElementById("indyüzde").disabled = true;
+                    document.getElementById("indtutar").disabled = true;
+
+                    document.getElementById("indyüzde").value = "";
+                    document.getElementById("indtutar").value = "";
+
+                    break;
+
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="flex-item">
+
+            <label for="fname">Birim Fiyatı:</label>
+            <input type="text" id="fiyat" name="fname"><br><br>
+
+            <label for="fname">Miktar:</label>
+            <input type="text" id="miktar" name="fname"><br><br><br><br>
+
+            <label>Toplam Tutar:</label>
+            <input type="text" id="sadetutar" value="" readonly>
+            <br><br>
+        </div>
+
+        <div class="flex-item">
+
+            <label for="fname">KDV (%):</label>
+            <input type="text" id="kdvyüzde" name="kdvinput" disabled="disabled"><br><br>
+
+            <label for="fname">KDV Tutarı:</label>
+            <input type="text" id="kdvtutar" name="kdvinput" disabled="disabled"><br><br>
+
+            <label>KDV ekle:</label>
+            <input type="checkbox" id="kdvekle" name="kdv" onclick="enableKdv()">
+            <br><br>
+
+            <label>KDV'li Toplam Tutar:</label>
+            <input type="text" id="kdvtoplamtutar" value="" readonly>
+        </div>
+
+
+        <div class="flex-item">
+
+            <label for="fname">İndirim (%):</label>
+            <input type="text" id="indyüzde" name="fname" disabled="disabled"><br><br>
+
+            <label for="fname">İndirim Tutarı:</label>
+            <input type="text" id="indtutar" name="fname" disabled="disabled"><br><br>
+
+            <label for="country">İndirim ekle:</label>
+            <input type="checkbox" id="indekle" name="indekle" value="Boat" onclick="enableInd()">
+            <br><br>
+
+            <label for="country">İndirimli Toplam Tutar:</label>
+            <input type="text" id="indtoplamtutar" value="" readonly>
+        </div>
+
+    </div>
+
+
+
+    <button id="calculateButton">Purchase</button>
+
+
+
+
+</body>
+
+<script>
+
+    document.getElementById('calculateButton').addEventListener('click', function (e) {
+        var sadeValue = parseInt(document.getElementById('fiyat').value) * parseInt(document.getElementById('miktar').value);
+
+        var kdvEkle = isNaN(parseInt(document.getElementById('kdvtutar').value)) ? sadeValue * (parseInt(document.getElementById('kdvyüzde').value) / 100) : parseInt(document.getElementById('kdvtutar').value);
+        kdvEkle = kdvEkle ? kdvEkle : 0; // if NaN turn to zero
+
+        var indEkle = isNaN(parseInt(document.getElementById('indtutar').value)) ? sadeValue * (parseInt(document.getElementById('indyüzde').value) / 100) : parseInt(document.getElementById('indtutar').value);
+        indEkle = indEkle ? indEkle : 0;
+
+        document.getElementById("sadetutar").value = sadeValue
+
+        if (document.getElementById("kdvekle").checked) {
+            document.getElementById("kdvtoplamtutar").value = sadeValue + kdvEkle;
+            //document.getElementById("indtoplamtutar").value = sadeValue+kdvEkle-indEkle;
+        }
+
+        if (document.getElementById("kdvekle").checked & document.getElementById("indekle").checked) {
+
+            document.getElementById("indtoplamtutar").value = sadeValue + kdvEkle - indEkle;
+        }
+
+        if (!document.getElementById("kdvekle").checked & document.getElementById("indekle").checked) {
+
+            document.getElementById("indtoplamtutar").value = sadeValue + -indEkle;
+        }
+
+
+
+    });
+
+</script>
+
+<script>
+
+    document.getElementById("kdvtutar").addEventListener("change", function () {
+        document.getElementById("kdvyüzde").value = (parseInt(document.getElementById("kdvtutar").value) * 100) / parseInt(document.getElementById("sadetutar").value)
+
+
+    })
+
+    var func1 = document.getElementById("indtutar").addEventListener("change", function () {
+        document.getElementById("indyüzde").value = (parseInt(document.getElementById("indtutar").value) * 100) / parseInt(document.getElementById("kdvtoplamtutar").value)
+
+
+    })
+
+    document.getElementById("kdvyüzde").addEventListener("change", function () {
+        document.getElementById("kdvtutar").value = (parseInt(document.getElementById("kdvyüzde").value) / 100) * parseInt(document.getElementById("sadetutar").value)
+
+
+    })
+
+    document.getElementById("indyüzde").addEventListener("change", function () {
+        document.getElementById("indtutar").value = (parseInt(document.getElementById("indyüzde").value) / 100) * parseInt(document.getElementById("kdvtoplamtutar").value)
+
+
+    })
+
+
+
+</script>
+
+<h3>Toplam Tutar = Birim Fiyatı x Miktar </h3>
+<h3>KDV'li Toplam Tutar; Toplam Tutar üzerinden hesaplanır. </h3>
+<h3>İndirimli Toplam Tutar; KDV'li Toplam Tutar üzerinden hesaplanır. </h3>
+
+</html>
