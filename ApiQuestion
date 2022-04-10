@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        .musteriTablo th,
+        .musteriTablo tr,
+        .musteriTablo td {
+            padding: 5px;
+            border: solid 1px #f00;
+            color: #717171;
+            text-align: center;
+        }
+    </style>
+
+<script>
+
+    function httpGet(theUrl) {
+
+        fetch('http://dummy.restapiexample.com/api/v1/employees')
+            .then(data => {
+                return data.json();
+            })
+            .then(post => {
+                console.log(post.title);
+
+                var icerik = "";
+                for (i = 0; i < post.data.length; i++) {
+                    icerik += "<tr><td> " + post.data[i].id + " </td><td> " + post.data[i].employee_name + " </td><td> " + post.data[i].employee_salary + " </td><td> " + post.data[i].employee_age + " </td><td> " + post.data[i].profile_image + " </td></tr>";
+                }
+                document.getElementById("tabloIcerik").innerHTML += icerik;
+            });
+    }
+
+
+</script>
+</head>
+
+<body>
+
+    <table id="tabloIcerik" class="musteriTablo" style="max-width: 800px; height: auto;
+        border: solid 1px #f00;" cellspacing="0" cellpadding="0">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Salary
+            </th>
+            <th>
+                Age
+            </th>
+            <th>
+                Image
+            </th>
+        </tr>
+    </table>
+
+    <button id="calculateButton" onclick="httpGet()">Click Here :)</button>
+
+
+    
+
+</body>
+
+
+</html>
