@@ -1,0 +1,22 @@
+using System;
+
+namespace quiz
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            int[] dizi = { 2, 7, 99, 15, 13, 3, 22, 42, 21 };
+
+             Array.Sort(dizi);             
+                                           
+            foreach (int value in dizi)    
+            {                              
+                Console.Write(value + " ");
+            }                              
+
+        } 
+
+    }
+}
