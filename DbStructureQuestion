@@ -1,0 +1,117 @@
+Here is my database structure. If i pass the quiz i would also like to talk about LOG tables.
+
+T_ORDERS 
+
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+| ID | BOOK_ID | CUSTOMER_ID | SOLD_PRICE | ORDER_DATE | SOLD_DATE  | SELLER_ID | ORDER_ACTIVE_SWC | ORDER_SOLD_SWC | CREATE_DATE | CREATE_ID  | UPDATE_DATE | UPDATE_ID |
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+| 1  | 15      | 102         |            | 01/02/2022 |            |           | T                | F              | 01/01/2020  | 12         |             |           |
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+| 2  | 20      | 50          |            | 05/03/2030 |            |           | F                | F              | 10/10/2022  | 1          | SYSDATE     | 15        |
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+| 3  | 303     | 70          | 8          | 07/04/2022 | 07/04/2022 | 29        | F                | T              | 06/04/2022  | 29         | 07/04/2022  | 29        |
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+| 4  | 20      | 50          | 14.99      | SYSDATE    | SYSDATE    | 1         | F                | T              | SYSDATE     | 1          |             |           |
++----+---------+-------------+------------+------------+------------+-----------+------------------+----------------+-------------+------------+-------------+-----------+
+
+T_ORDERS is the main table for this book store and since it is the main table there shouldn't be any VARCHARs on it to increase the speed of queries that uses this table. 
+
+Columns:
+
+ID: PRIMARY KEY OF THE TABLE
+
+BOOK_ID: FOREIGN KEY FOR T_BOOKS.ID 
+
+CUSTOMER_ID: FOREIGN KEY FOR T_CUSTOMER_INFOS.ID
+
+SOLD_PRICE: In reality a book's store price and the final price that the customer paid can be diffrent because of bargaining. This is the final price after bargain
+
+ORDER_DATE: Date when the book sells.
+
+SOLD_DATE: Date when the book has been bought.
+
+SELLER_ID: ID of the employee that sold the book.
+
+ORDER_ACTIVE_SWC: 'T' means order is still active, 'F' means order is cancelled or customer bought the book.
+
+ORDER_SOLD_SWC: This switch differentiates between order being cancelled or book being bought. 'T' means book has been bought, 'F' means book hasn't been bought.
+
+CREATE_DATE: This columns shows when did the book order got recorded to database
+
+CREATE_ID: This columns shows us which employee recorded the book order.
+
+UPDATE_DATE: Date when the row had any changes on its columns
+
+UPDATE_ID: Employee ID of the person that changed the row data
+
+Rows:
+
+1: This row is about a customer putting a order on a later date
+
+2: This row is about a customer putting a order on a later date but canceling it for a reason.
+
+3: This row is about customer compleating his/her order and buying the book
+
+4: This row is about the second row. Turns out customer_id 50 cancelled his/her order because he/she wanted to buy the book now. 4th row also shows us what happens when a customer buys a book without an order
+
+
+
+T_BOOKS
+
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+| ID  | BOOK_NAME                                     | PRICE (ALSO IN T_ORDER TABLE) | AUTHOR(THIS COLUMN SHOULD BE DONE WTIH IDs) | CREATE_DATE | CREATE_ID | UPDATE_DATE | UPDATE_ID |
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+| 15  | THE LORD OF THE RINGS: THE RETURN OF THE KING | 99.99                         | J. R. R. Tolkien                            | 01/01/2021  | 1         |             |           |
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+| 20  | ADO.NET                                       | 14.99                         | Matthew MacDonald, Bill Hamilton            | 01/01/2021  | 12        |             |           |
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+| 303 | Oracle For Beginners                          | 10.99                         | Utku Ünal                                   | 01/01/2021  | 29        |             |           |
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+| 4   | No Silver Bullet                              | 19.99                         | Fred Brooks                                 | 01/01/2021  | 12        | 13/10/2022  | 29        |
++-----+-----------------------------------------------+-------------------------------+---------------------------------------------+-------------+-----------+-------------+-----------+
+
+T_BOOKS.ID = T_ORDERS.BOOK_ID
+
+PRICE: Store price of the book. Can be diffrent than the price that the customer pays (because of bargaining).
+
+Rest of the columns are self explanatory.
+
+
+T_CUSTOMER_INFOS (THIS TABLE SHOULDN'T BE LIKE THIS, ADDRESS AND PHONE NUMBER SHOULD ALSO HAVE THEIR OWN TABLE FOR REMOVING THE COUNT LIMIT OF PHONE NUMBERS AND ADDRESS PER CUSTOMER  )
+
++-----+--------+----------+-----------+---------------+----------------+----------+-------------+------------+-------------+-----------+
+| ID  | NAME   | SURNAME  | AREA_CODE | PHONE_NUMBER  | ADRESS         | ZIP_CODE | CREATE_DATE | CREATE_ID  | UPDATE_DATE | UPDATE_ID |
++-----+--------+----------+-----------+---------------+----------------+----------+-------------+------------+-------------+-----------+
+| 102 | BERKAY | DUMAN    | +90       | 538 XXX XX 10 | MUSTERI ADRESI | 34760    | 01/01/2020  | 12         |             |           |
++-----+--------+----------+-----------+---------------+----------------+----------+-------------+------------+-------------+-----------+
+| 50  | SERDAR | YILDIRIM | +90       | 531 XXX XX 33 | MUSTERI ADRESI | 1235     | 10/10/2022  | 1          |             |           |
++-----+--------+----------+-----------+---------------+----------------+----------+-------------+------------+-------------+-----------+
+| 70  | FERİDE | ATEŞ     | +65       | 14845612      | MUSTERI ADRESI | 98514    | 06/04/2022  | 29         |             |           |
++-----+--------+----------+-----------+---------------+----------------+----------+-------------+------------+-------------+-----------+
+
+Table where the customer infos being hold 
+
+T_CUSTOMER_INFOS.ID = T_ORDERS.CUSTOMER_ID
+
+Rest of the columns are self explanatory.
+
+
+T_EMPLOYEES (THIS TABLE SHOULDN'T BE LIKE THIS, ADDRESS AND PHONE NUMBER SHOULD ALSO HAVE THEIR OWN TABLE FOR REMOVING THE COUNT LIMIT OF PHONE NUMBERS AND ADDRESS PER EMPLOYE  )
+
++----+----------+---------+-----------+---------------+------------------+------------+------------+-------------+-----------+
+| ID | NAME     | SURNAME | AREA_CODE | PHONE_NUMBER  | ADDRESS          | ACTIVE_SWC | CREATE_ID  | UPDATE_DATE | UPDATE_ID |
++----+----------+---------+-----------+---------------+------------------+------------+------------+-------------+-----------+
+| 1  | AYÇA     | YEŞİL   | +90       | 538 XXX XX 22 | EMPLOYEE ADDRESS | T          | 1          |             |           |
++----+----------+---------+-----------+---------------+------------------+------------+------------+-------------+-----------+
+| 12 | GÖRKEM   | TESTİ   | +90       | 531 XXX XX 11 | EMPLOYEE ADDRESS | T          | 1          |             |           |
++----+----------+---------+-----------+---------------+------------------+------------+------------+-------------+-----------+
+| 29 | BUSE NUR | UZUN    | +90       | 532 XXX XX 46 | EMPLOYEE ADDRESS | F          | 1          | 20/01/2025  | 1         |
++----+----------+---------+-----------+---------------+------------------+------------+------------+-------------+-----------+
+
+Table where the employee infos being hold 
+
+T_EMPLOYEES.ID = T_ORDERS.SELLER_ID
+T_EMPLOYEES.ID = T_ORDERS.CREATE_ID
+T_EMPLOYEES.ID = T_ORDERS.UPDATE_ID
+
+Rest of the columns are self explanatory.
